@@ -1,0 +1,415 @@
+--- a/Marlin/Configuration.h
++++ b/Marlin/Configuration.h
+@@ -61,7 +61,7 @@
+ // @section info
+ 
+ // Author info of this build printed to the host during boot and M115
+-#define STRING_CONFIG_H_AUTHOR "(none, default config)" // Who made the changes.
++#define STRING_CONFIG_H_AUTHOR "HX-300 CoreXY @ lhuohuo" // Who made the changes.
+ //#define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
+ 
+ /**
+@@ -88,7 +88,7 @@
+ 
+ // Choose the name from boards.h that matches your setup
+ #ifndef MOTHERBOARD
+-  #define MOTHERBOARD BOARD_RAMPS_14_EFB
++  #define MOTHERBOARD BOARD_BTT_SKR_V3_0
+ #endif
+ 
+ // @section serial
+@@ -101,7 +101,7 @@
+  *
+  * :[-1, 0, 1, 2, 3, 4, 5, 6, 7]
+  */
+-#define SERIAL_PORT 0
++#define SERIAL_PORT -1   // SKR3 通过 USB-CDC 与上位机通信
+ 
+ /**
+  * Serial Port Baud Rate
+@@ -138,7 +138,7 @@
+ //#define BLUETOOTH
+ 
+ // Name displayed in the LCD "Ready" message and Info menu
+-//#define CUSTOM_MACHINE_NAME "3D Printer"
++#define CUSTOM_MACHINE_NAME "HX-300 CoreXY"
+ 
+ // Printer's unique ID, used by some programs to differentiate between machines.
+ // Choose your own or use a service like https://www.uuidgenerator.net/version4
+@@ -161,12 +161,12 @@
+  *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
+  * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
+  */
+-#define X_DRIVER_TYPE  A4988
+-#define Y_DRIVER_TYPE  A4988
+-#define Z_DRIVER_TYPE  A4988
++#define X_DRIVER_TYPE  TMC2209
++#define Y_DRIVER_TYPE  TMC2209
++#define Z_DRIVER_TYPE  TMC2209
+ //#define X2_DRIVER_TYPE A4988
+ //#define Y2_DRIVER_TYPE A4988
+-//#define Z2_DRIVER_TYPE A4988
++#define Z2_DRIVER_TYPE TMC2209
+ //#define Z3_DRIVER_TYPE A4988
+ //#define Z4_DRIVER_TYPE A4988
+ //#define I_DRIVER_TYPE  A4988
+@@ -175,7 +175,7 @@
+ //#define U_DRIVER_TYPE  A4988
+ //#define V_DRIVER_TYPE  A4988
+ //#define W_DRIVER_TYPE  A4988
+-#define E0_DRIVER_TYPE A4988
++#define E0_DRIVER_TYPE TMC2209
+ //#define E1_DRIVER_TYPE A4988
+ //#define E2_DRIVER_TYPE A4988
+ //#define E3_DRIVER_TYPE A4988
+@@ -551,7 +551,7 @@
+  *   998 : Dummy Table that ALWAYS reads 25°C or the temperature defined below.
+  *   999 : Dummy Table that ALWAYS reads 100°C or the temperature defined below.
+  */
+-#define TEMP_SENSOR_0 1
++#define TEMP_SENSOR_0 5  // ATC Semitec 104GT-2（按实际热敏修改）
+ #define TEMP_SENSOR_1 0
+ #define TEMP_SENSOR_2 0
+ #define TEMP_SENSOR_3 0
+@@ -634,7 +634,7 @@
+ // Above this temperature the heater will be switched off.
+ // This can protect components from overheating, but NOT from shorts and failures.
+ // (Use MINTEMP for thermistor short/failure protection.)
+-#define HEATER_0_MAXTEMP 275
++#define HEATER_0_MAXTEMP 300
+ #define HEATER_1_MAXTEMP 275
+ #define HEATER_2_MAXTEMP 275
+ #define HEATER_3_MAXTEMP 275
+@@ -642,7 +642,7 @@
+ #define HEATER_5_MAXTEMP 275
+ #define HEATER_6_MAXTEMP 275
+ #define HEATER_7_MAXTEMP 275
+-#define BED_MAXTEMP      150
++#define BED_MAXTEMP      110
+ #define CHAMBER_MAXTEMP  60
+ 
+ /**
+@@ -890,7 +890,7 @@
+ 
+ // Enable one of the options below for CoreXY, CoreXZ, or CoreYZ kinematics,
+ // either in the usual order or reversed
+-//#define COREXY
++#define COREXY
+ //#define COREXZ
+ //#define COREYZ
+ //#define COREYX
+@@ -1062,7 +1062,7 @@
+ // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
+ #define USE_XMIN_PLUG
+ #define USE_YMIN_PLUG
+-#define USE_ZMIN_PLUG
++//#define USE_ZMIN_PLUG  // 使用 BLTouch 作为 Z 原点
+ //#define USE_IMIN_PLUG
+ //#define USE_JMIN_PLUG
+ //#define USE_KMIN_PLUG
+@@ -1130,9 +1130,9 @@
+ #endif
+ 
+ // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
+-#define X_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+-#define Y_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+-#define Z_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
++#define X_MIN_ENDSTOP_INVERTING true  // 常闭限位 // Set to true to invert the logic of the endstop.
++#define Y_MIN_ENDSTOP_INVERTING true  // 常闭限位 // Set to true to invert the logic of the endstop.
++#define Z_MIN_ENDSTOP_INVERTING false  // Z 原点由 BLTouch 承担 // Set to true to invert the logic of the endstop.
+ #define I_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+ #define J_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+ #define K_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+@@ -1196,14 +1196,14 @@
+  * Override with M92
+  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
+  */
+-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 500 }
++#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 400 }  // E 请做 100mm 校准
+ 
+ /**
+  * Default Max Feed Rate (linear=mm/s, rotational=°/s)
+  * Override with M203
+  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
+  */
+-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5, 25 }
++#define DEFAULT_MAX_FEEDRATE          { 500, 500, 20, 100 }
+ 
+ //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
+ #if ENABLED(LIMITED_MAX_FR_EDITING)
+@@ -1216,7 +1216,7 @@
+  * Override with M201
+  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
+  */
+-#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 10000 }
++#define DEFAULT_MAX_ACCELERATION      { 5000, 5000, 400, 3000 }
+ 
+ //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 to DEFAULT_MAX_ACCELERATION * 2
+ #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
+@@ -1231,9 +1231,9 @@
+  *   M204 R    Retract Acceleration
+  *   M204 T    Travel Acceleration
+  */
+-#define DEFAULT_ACCELERATION          3000    // X, Y, Z and E acceleration for printing moves
++#define DEFAULT_ACCELERATION          5000    // X, Y, Z and E acceleration for printing moves
+ #define DEFAULT_RETRACT_ACCELERATION  3000    // E acceleration for retracts
+-#define DEFAULT_TRAVEL_ACCELERATION   3000    // X, Y, Z acceleration for travel (non printing) moves
++#define DEFAULT_TRAVEL_ACCELERATION   5000    // X, Y, Z acceleration for travel (non printing) moves
+ 
+ /**
+  * Default Jerk limits (mm/s)
+@@ -1263,7 +1263,7 @@
+    #endif
+ #endif
+ 
+-#define DEFAULT_EJERK    5.0  // May be used by Linear Advance
++#define DEFAULT_EJERK    10.0  // May be used by Linear Advance
+ 
+ /**
+  * Junction Deviation Factor
+@@ -1305,7 +1305,7 @@
+ #define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN
+ 
+ // Force the use of the probe for Z-axis homing
+-//#define USE_PROBE_FOR_Z_HOMING
++#define USE_PROBE_FOR_Z_HOMING
+ 
+ /**
+  * Z_MIN_PROBE_PIN
+@@ -1359,7 +1359,7 @@
+ /**
+  * The BLTouch probe uses a Hall effect sensor and emulates a servo.
+  */
+-//#define BLTOUCH
++#define BLTOUCH
+ 
+ /**
+  * MagLev V4 probe by MDD
+@@ -1511,7 +1511,7 @@
+  *     |    [-]    |
+  *     O-- FRONT --+
+  */
+-#define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
++#define NOZZLE_TO_PROBE_OFFSET { -27, -12, 0 }  // 按实际打印头测量修改
+ 
+ // Most probes should stay away from the edges of the bed, but
+ // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
+@@ -1724,8 +1724,8 @@
+ // @section geometry
+ 
+ // The size of the printable area
+-#define X_BED_SIZE 200
+-#define Y_BED_SIZE 200
++#define X_BED_SIZE 300
++#define Y_BED_SIZE 300
+ 
+ // Travel limits (linear=mm, rotational=°) after homing, corresponding to endstop positions.
+ #define X_MIN_POS 0
+ #define Y_MIN_POS 0
+@@ -1733,7 +1733,7 @@
+ #define X_MAX_POS X_BED_SIZE
+ #define Y_MAX_POS Y_BED_SIZE
+-#define Z_MAX_POS 200
++#define Z_MAX_POS 300
+ //#define I_MIN_POS 0
+ //#define I_MAX_POS 50
+ //#define J_MIN_POS 0
+@@ -1803,8 +1803,9 @@
+  * RAMPS-based boards use SERVO3_PIN for the first runout sensor.
+  * For other boards you may need to define FIL_RUNOUT_PIN, FIL_RUNOUT2_PIN, etc.
+  */
+-//#define FILAMENT_RUNOUT_SENSOR
++#define FILAMENT_RUNOUT_SENSOR
+ #if ENABLED(FILAMENT_RUNOUT_SENSOR)
++  #define FIL_RUNOUT_PIN PA9
+   #define FIL_RUNOUT_ENABLED_DEFAULT true // Enable the sensor on startup. Override with M412 followed by M500.
+   #define NUM_RUNOUT_SENSORS   1          // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
+ 
+@@ -1905,7 +1906,7 @@
+  */
+ //#define AUTO_BED_LEVELING_3POINT
+ //#define AUTO_BED_LEVELING_LINEAR
+-//#define AUTO_BED_LEVELING_BILINEAR
++#define AUTO_BED_LEVELING_BILINEAR
+ //#define AUTO_BED_LEVELING_UBL
+ //#define MESH_BED_LEVELING
+ 
+@@ -1920,7 +1921,7 @@
+  * these options to restore the prior leveling state or to always enable
+  * leveling immediately after G28.
+  */
+-//#define RESTORE_LEVELING_AFTER_G28
++#define RESTORE_LEVELING_AFTER_G28
+ //#define ENABLE_LEVELING_AFTER_G28
+ 
+ /**
+@@ -1991,7 +1992,7 @@
+ #if EITHER(AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_BILINEAR)
+ 
+   // Set the number of grid points per dimension.
+-  #define GRID_MAX_POINTS_X 3
++  #define GRID_MAX_POINTS_X 7
+   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
+ 
+   // Probe along the Y axis, advancing X after each column
+@@ -2122,7 +2123,7 @@
+  * - Allows Z homing only when XY positions are known and trusted.
+  * - If stepper drivers sleep, XY homing may be required again before Z homing.
+  */
+-//#define Z_SAFE_HOMING
++#define Z_SAFE_HOMING
+ 
+ #if ENABLED(Z_SAFE_HOMING)
+   #define Z_SAFE_HOMING_X_POINT X_CENTER  // (mm) X point for Z homing
+@@ -2271,7 +2272,7 @@
+  *    P1  Raise the nozzle always to Z-park height.
+  *    P2  Raise the nozzle by Z-park amount, limited to Z_MAX_POS.
+  */
+-//#define NOZZLE_PARK_FEATURE
++#define NOZZLE_PARK_FEATURE
+ 
+ #if ENABLED(NOZZLE_PARK_FEATURE)
+   // Specify a park position as { X, Y, Z_raise }
+--- a/Marlin/Configuration_adv.h
++++ b/Marlin/Configuration_adv.h
+@@ -635,7 +635,7 @@
+  * Multiple extruders can be assigned to the same pin in which case
+  * the fan will turn on when any selected extruder is above the threshold.
+  */
+-#define E0_AUTO_FAN_PIN -1
++#define E0_AUTO_FAN_PIN FAN1_PIN  // 热端散热扇常开（FAN1/PB6，模型扇用 FAN0/PB7）
+ #define E1_AUTO_FAN_PIN -1
+ #define E2_AUTO_FAN_PIN -1
+ #define E3_AUTO_FAN_PIN -1
+@@ -967,7 +967,7 @@
+  * Z Steppers Auto-Alignment
+  * Add the G34 command to align multiple Z steppers using a bed probe.
+  */
+-//#define Z_STEPPER_AUTO_ALIGN
++#define Z_STEPPER_AUTO_ALIGN
+ #if ENABLED(Z_STEPPER_AUTO_ALIGN)
+   /**
+    * Define probe X and Y positions for Z1, Z2 [, Z3 [, Z4]]
+@@ -1081,8 +1081,8 @@
+  *  X<1>         Set the given parameters only for the X axis.
+  *  Y<1>         Set the given parameters only for the Y axis.
+  */
+-//#define INPUT_SHAPING_X
+-//#define INPUT_SHAPING_Y
++#define INPUT_SHAPING_X
++#define INPUT_SHAPING_Y
+ #if EITHER(INPUT_SHAPING_X, INPUT_SHAPING_Y)
+   #if ENABLED(INPUT_SHAPING_X)
+     #define SHAPING_FREQ_X  40.0        // (Hz) The default dominant resonant frequency on the X axis.
+@@ -2064,7 +2064,7 @@
+  *
+  * Warning: Does not respect endstops!
+  */
+-//#define BABYSTEPPING
++#define BABYSTEPPING
+ #if ENABLED(BABYSTEPPING)
+   //#define INTEGRATED_BABYSTEPPING         // EXPERIMENTAL integration of babystepping into the Stepper ISR
+   //#define BABYSTEP_WITHOUT_HOMING
+@@ -2075,7 +2075,7 @@
+   #define BABYSTEP_MULTIPLICATOR_Z  1       // (steps or mm) Steps or millimeter distance for each Z babystep
+   #define BABYSTEP_MULTIPLICATOR_XY 1       // (steps or mm) Steps or millimeter distance for each XY babystep
+ 
+-  //#define DOUBLECLICK_FOR_Z_BABYSTEPPING  // Double-click on the Status Screen for Z Babystepping.
++#define DOUBLECLICK_FOR_Z_BABYSTEPPING  // Double-click on the Status Screen for Z Babystepping.
+   #if ENABLED(DOUBLECLICK_FOR_Z_BABYSTEPPING)
+     #define DOUBLECLICK_MAX_INTERVAL 1250   // Maximum interval between clicks, in milliseconds.
+                                             // Note: Extra time may be added to mitigate controller latency.
+@@ -2087,7 +2087,7 @@
+ 
+   //#define BABYSTEP_DISPLAY_TOTAL          // Display total babysteps since last G28
+ 
+-  //#define BABYSTEP_ZPROBE_OFFSET          // Combine M851 Z and Babystepping
++#define BABYSTEP_ZPROBE_OFFSET          // Combine M851 Z and Babystepping
+   #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
+     //#define BABYSTEP_HOTEND_Z_OFFSET      // For multiple hotends, babystep relative Z offsets
+     //#define BABYSTEP_ZPROBE_GFX_OVERLAY   // Enable graphical overlay on Z-offset editor
+@@ -2648,7 +2648,7 @@
+  *
+  * Enable PARK_HEAD_ON_PAUSE to add the G-code M125 Pause and Park.
+  */
+-//#define ADVANCED_PAUSE_FEATURE
++#define ADVANCED_PAUSE_FEATURE
+ #if ENABLED(ADVANCED_PAUSE_FEATURE)
+   #define PAUSE_PARK_RETRACT_FEEDRATE         60  // (mm/s) Initial retract feedrate.
+   #define PAUSE_PARK_RETRACT_LENGTH            2  // (mm) Initial retract.
+@@ -2688,7 +2688,7 @@
+    //#define FILAMENT_CHANGE_RESUME_ON_INSERT      // Automatically continue / load filament when runout sensor is triggered again.
+    //#define PAUSE_REHEAT_FAST_RESUME              // Reduce number of waits by not prompting again post-timeout before continuing.
+ 
+-  //#define PARK_HEAD_ON_PAUSE                    // Park the nozzle during pause and filament change.
++#define PARK_HEAD_ON_PAUSE                    // Park the nozzle during pause and filament change.
+    //#define HOME_BEFORE_FILAMENT_CHANGE           // If needed, home before parking for filament change
+ 
+    //#define FILAMENT_LOAD_UNLOAD_GCODES           // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
+@@ -2732,7 +2732,7 @@
+    #define INTERPOLATE      true
+ 
+    #if AXIS_IS_TMC_CONFIG(X)
+-    #define X_CURRENT       800        // (mA) RMS current. Multiply by 1.414 for peak current.
++    #define X_CURRENT       1100        // (mA) RMS current. Multiply by 1.414 for peak current.
+      #define X_CURRENT_HOME  X_CURRENT  // (mA) RMS current for homing. (Typically lower than *_CURRENT.)
+      #define X_MICROSTEPS     16        // 0..256
+      #define X_RSENSE          0.11     // Multiplied x1000 for TMC26X
+@@ -2752,7 +2752,7 @@
+    #endif
+ 
+    #if AXIS_IS_TMC_CONFIG(Y)
+-    #define Y_CURRENT       800
++    #define Y_CURRENT       1100
+      #define Y_CURRENT_HOME  Y_CURRENT
+      #define Y_MICROSTEPS     16
+      #define Y_RSENSE          0.11
+@@ -2772,7 +2772,7 @@
+    #endif
+ 
+    #if AXIS_IS_TMC_CONFIG(Z)
+-    #define Z_CURRENT       800
++    #define Z_CURRENT       1000
+      #define Z_CURRENT_HOME  Z_CURRENT
+      #define Z_MICROSTEPS     16
+      #define Z_RSENSE          0.11
+@@ -2782,7 +2782,7 @@
+    #endif
+ 
+    #if AXIS_IS_TMC_CONFIG(Z2)
+-    #define Z2_CURRENT      Z_CURRENT
++    #define Z2_CURRENT      1000
+      #define Z2_CURRENT_HOME Z_CURRENT_HOME
+      #define Z2_MICROSTEPS   Z_MICROSTEPS
+      #define Z2_RSENSE       Z_RSENSE
+@@ -2872,7 +2872,7 @@
+    #endif
+ 
+    #if AXIS_IS_TMC_CONFIG(E0)
+-    #define E0_CURRENT      800
++    #define E0_CURRENT      800  // 直驱挤出
+      #define E0_MICROSTEPS    16
+      #define E0_RSENSE         0.11
+      #define E0_CHAIN_POS     -1
+@@ -3100,7 +3100,7 @@
+    * M912 - Clear stepper driver overtemperature pre-warn condition flag.
+    * M122 - Report driver parameters (Requires TMC_DEBUG)
+    */
+-  //#define MONITOR_DRIVER_STATUS
++#define MONITOR_DRIVER_STATUS
+ 
+    #if ENABLED(MONITOR_DRIVER_STATUS)
+      #define CURRENT_STEP_DOWN     50  // [mA]
+@@ -3860,10 +3860,10 @@
+   * Host Prompt Support enables Marlin to use the host for user prompts so
+   * filament runout and other processes can be managed from the host side.
+   */
+-//#define HOST_ACTION_COMMANDS
++#define HOST_ACTION_COMMANDS
+ #if ENABLED(HOST_ACTION_COMMANDS)
+   //#define HOST_PAUSE_M76                // Tell the host to pause in response to M76
+-  //#define HOST_PROMPT_SUPPORT           // Initiate host prompts to get user feedback
++#define HOST_PROMPT_SUPPORT           // Initiate host prompts to get user feedback
+   #if ENABLED(HOST_PROMPT_SUPPORT)
+     //#define HOST_STATUS_NOTIFICATIONS   // Send some status messages to the host as notifications
+   #endif
